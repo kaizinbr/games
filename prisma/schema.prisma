@@ -5,31 +5,162 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 model User {
-  id       String  @id @default(cuid())
-  name     String?
-  email    String  @unique
-  password String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  posts    Post[]
+    id        String    @id @default(uuid())
+    name      String?
+    email     String    @unique
+    password  String
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @default(now()) @updatedAt
+    posts     Post[]
+    Profile   Profile?
+    Account   Account[]
+    Session   Session[]
+}
+
+model Profile {
+    id        String   @id
+    user      User     @relation(fields: [id], references: [id], onDelete: Cascade)
+    name      String?
+    bio       String?
+    username  String   @unique
+    lowername String   @unique
+    avatarUrl String?
+    pronouns  String?
+    site      String?
+
+    lists      List[]
+    posts      GamePost[]
+    gameStatus UserGameStatus[]
+
+    public   Boolean @default(false)
+    verified Boolean @default(false)
+    updatedAt DateTime @default(now()) @updatedAt
+}
+
+model Game {
+    id       String  @id @default(uuid())
+    rawgId   Int     @unique
+    title    String
+    coverUrl String?
+    genre    String?
+    platform String?
+
+    lists      ListGame[]
+    posts      GamePost[]
+    gameStatus UserGameStatus[]
+
+    createdAt DateTime @default(now())
+}
+
+model List {
+    id          String  @id @default(uuid())
+    name        String
+    description String?
+
+    user   Profile @relation(fields: [userId], references: [id])
+    userId String
+
+    games ListGame[]    
+
+    createdAt DateTime @default(now())
+}
+
+model ListGame {
+    id String @id @default(uuid())
+
+    list   List   @relation(fields: [listId], references: [id])
+    listId String
+
+    game   Game   @relation(fields: [gameId], references: [id])
+    gameId String
+    @@unique([listId, gameId])
+}
+
+model GamePost {
+    id       String  @id @default(uuid())
+    content  String
+    imageUrl String?
+
+    user   Profile @relation(fields: [userId], references: [id])
+    userId String
+
+    game   Game?   @relation(fields: [gameId], references: [id])
+    gameId String?
+
+    createdAt DateTime @default(now())
+}
+
+model UserGameStatus {
+    id     String     @id @default(uuid())
+    status GameStatus
+
+    user   Profile @relation(fields: [userId], references: [id])
+    userId String
+
+    game   Game   @relation(fields: [gameId], references: [id])
+    gameId String
+    @@unique([userId, gameId])
+}
+
+enum GameStatus {
+    WANT_TO_PLAY
+    PLAYING
+    PLAYED
+    DROPPED
+}
+
+model Account {
+    id                String  @id @default(uuid())
+    userId            String
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String?
+    access_token      String?
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String?
+    session_state     String?
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([provider, providerAccountId])
+}
+
+model Session {
+    id           String   @id @default(uuid())
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
 }
 
 model Post {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String?
-  author    User?    @relation(fields: [authorId], references: [id])
+    id        String   @id @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    title     String
+    content   String?
+    published Boolean  @default(false)
+    authorId  String?
+    author    User?    @relation(fields: [authorId], references: [id])
 }

@@ -21,6 +21,7 @@
     },
     "devDependencies": {
         "@eslint/eslintrc": "^3",
+        "@faker-js/faker": "^10.0.0",
         "@types/bcryptjs": "^3.0.0",
         "@types/node": "^20",
         "@types/react": "^19",
@@ -29,7 +30,7 @@
         "eslint-config-next": "15.1.7",
         "postcss": "^8",
         "prisma": "^6.3.1",
-        "tailwindcss": "^3.4.1",
+        "tailwindcss": "^4.1.13",
         "tsx": "^4.19.2",
         "typescript": "^5"
     },
