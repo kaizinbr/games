@@ -1,6 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import prisma from "@/lib/prisma";
+import React, { useState } from "react";
 
 type Profile = {
     id: string;
@@ -82,7 +81,7 @@ export const EditProfileForm: React.FC<EditFormProps> = ({
     if (!profile) return <div>Carregando...</div>;
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-2 " onSubmit={handleSubmit}>
             <h2>Editar Perfil</h2>
             {error && <div style={{ color: "red" }}>{error}</div>}
             <label>
@@ -92,6 +91,7 @@ export const EditProfileForm: React.FC<EditFormProps> = ({
                     value={form.name ?? ""}
                     onChange={handleChange}
                     type="text"
+                    className="bg-white/20"
                 />
             </label>
             <label>
@@ -101,6 +101,7 @@ export const EditProfileForm: React.FC<EditFormProps> = ({
                     value={form.username ?? ""}
                     onChange={handleChange}
                     type="text"
+                    className="bg-white/20"
                     required
                 />
             </label>
@@ -110,6 +111,7 @@ export const EditProfileForm: React.FC<EditFormProps> = ({
                     name="bio"
                     value={form.bio ?? ""}
                     onChange={handleChange}
+                    className="bg-white/20"
                 />
             </label>
             <label>
@@ -119,6 +121,7 @@ export const EditProfileForm: React.FC<EditFormProps> = ({
                     value={form.avatarUrl ?? ""}
                     onChange={handleChange}
                     type="text"
+                    className="bg-white/20"
                 />
             </label>
             <label>
@@ -128,6 +131,7 @@ export const EditProfileForm: React.FC<EditFormProps> = ({
                     value={form.pronouns ?? ""}
                     onChange={handleChange}
                     type="text"
+                    className="bg-white/20"
                 />
             </label>
             <label>
@@ -137,6 +141,7 @@ export const EditProfileForm: React.FC<EditFormProps> = ({
                     value={form.site ?? ""}
                     onChange={handleChange}
                     type="text"
+                    className="bg-white/20"
                 />
             </label>
             <button type="submit" disabled={loading}>
