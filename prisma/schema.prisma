@@ -27,22 +27,24 @@ model User {
 }
 
 model Profile {
-    id        String   @id
-    user      User     @relation(fields: [id], references: [id], onDelete: Cascade)
-    name      String?
-    bio       String?
-    username  String   @unique
-    lowername String   @unique
-    avatarUrl String?
-    pronouns  String?
-    site      String?
+    id            String  @id
+    user          User    @relation(fields: [id], references: [id], onDelete: Cascade)
+    name          String?
+    bio           String?
+    username      String  @unique
+    lowername     String  @unique
+    avatarUrl     String?
+    pronouns      String?
+    site          String?
+    age           Int?
+    favoriteGenre String?
 
     lists      List[]
     posts      GamePost[]
     gameStatus UserGameStatus[]
 
-    public   Boolean @default(false)
-    verified Boolean @default(false)
+    public    Boolean  @default(false)
+    verified  Boolean  @default(false)
     updatedAt DateTime @default(now()) @updatedAt
 }
 
@@ -69,7 +71,7 @@ model List {
     user   Profile @relation(fields: [userId], references: [id])
     userId String
 
-    games ListGame[]    
+    games ListGame[]
 
     createdAt DateTime @default(now())
 }
@@ -82,6 +84,7 @@ model ListGame {
 
     game   Game   @relation(fields: [gameId], references: [id])
     gameId String
+
     @@unique([listId, gameId])
 }
 
@@ -108,6 +111,7 @@ model UserGameStatus {
 
     game   Game   @relation(fields: [gameId], references: [id])
     gameId String
+
     @@unique([userId, gameId])
 }
 

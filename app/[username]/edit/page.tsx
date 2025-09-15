@@ -13,7 +13,6 @@ export default async function EditProfilePage({
         return <div>Você precisa estar logado para editar o perfil.</div>;
     }
 
-    
     const username = (await params).username;
 
     const profile = await prisma.profile.findUnique({
@@ -27,10 +26,9 @@ export default async function EditProfilePage({
 
     // Renderize o formulário de edição aqui
     return (
-        <form>
-            {/* campos para editar bio, avatar, etc. */}
+        <div className="min-h-screen flex flex-col items-center py-24 px-8">
             <span>pode editar</span>
             <EditProfileForm profile={profile} />
-        </form>
+        </div>
     );
 }

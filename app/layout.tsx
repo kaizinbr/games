@@ -1,6 +1,6 @@
 // app/layout.tsx
 import "./globals.css";
-import Header from "./Header";
+import HeaderWrapper from "@/components/HeaderWrapper";
 import Providers from "./providers";
 
 export const metadata = {
@@ -14,11 +14,11 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en">
+        <html lang="pt-br">
             <body>
                 <Providers>
                     <div className="min-h-screen flex flex-col">
-                        <Header />
+                        <HeaderWrapper />
                         <main className="flex-1">{children}</main>
                     </div>
                 </Providers>

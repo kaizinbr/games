@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma'
-
+import Link from 'next/link'
 
 export default async function UserProfile({
     params,
@@ -19,7 +19,9 @@ export default async function UserProfile({
                 {user ? user.user.name || user.user.email : 'User not found'}
             </h1>
             <p className="text-gray-600">{user?.bio || 'No bio available'}</p>
-            
+            <Link href={`/${user?.username}/edit`} className="text-blue-500 hover:underline">
+                Edit Profile
+            </Link>
         </div>
     );
 }
