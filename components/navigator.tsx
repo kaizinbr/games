@@ -33,6 +33,12 @@ export default function Header({ profile }: { profile: Profile | null }) {
                                 New Post
                             </Link>
                             <Link
+                                href="/lists/new"
+                                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+                            >
+                                New List
+                            </Link>
+                            <Link
                                 href={`/${profile?.username || "/me"}`}
                                 className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
                             >

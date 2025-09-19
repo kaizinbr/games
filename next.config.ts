@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
             new URL(
                 "https://qgsmppcfumnnxyd6.public.blob.vercel-storage.com/**"
             ),
+            new URL("https://media.rawg.io/**"),
         ],
     },
 };

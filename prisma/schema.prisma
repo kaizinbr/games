@@ -49,12 +49,15 @@ model Profile {
 }
 
 model Game {
-    id       String  @id @default(uuid())
-    rawgId   Int     @unique
-    title    String
-    coverUrl String?
-    genre    String?
-    platform String?
+    id          String   @id @default(uuid())
+    rawgId      Int      @unique
+    title       String
+    coverUrl    String?
+    genre       String[]
+    platform    String[]
+    publisher   String[]
+    playtime    Int?
+    releaseDate String?
 
     lists      ListGame[]
     posts      GamePost[]
@@ -65,6 +68,7 @@ model Game {
 
 model List {
     id          String  @id @default(uuid())
+    shortId     String  @unique @default(uuid())
     name        String
     description String?
 
@@ -82,24 +86,29 @@ model ListGame {
     list   List   @relation(fields: [listId], references: [id])
     listId String
 
-    game   Game   @relation(fields: [gameId], references: [id])
-    gameId String
+    game   Game @relation(fields: [gameId], references: [rawgId])
+    gameId Int
 
     @@unique([listId, gameId])
 }
 
 model GamePost {
     id       String  @id @default(uuid())
+    shortId  String  @unique
     content  String
     imageUrl String?
 
     user   Profile @relation(fields: [userId], references: [id])
     userId String
 
-    game   Game?   @relation(fields: [gameId], references: [id])
-    gameId String?
+    game   Game? @relation(fields: [gameId], references: [rawgId])
+    gameId Int?
 
+    played Int?
+
+    published Boolean  @default(false)
     createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
 }
 
 model UserGameStatus {

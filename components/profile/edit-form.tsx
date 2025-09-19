@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useDebouncedCallback } from "use-debounce";
 import containsSpecialChars from "@/utils/containsSpecialsChars";
-import AvatarUpload from "@/components/profile/avatarUploader";
+import AvatarUpload from "@/components/profile/AvatarUploader";
 
 type Profile = {
     id: string;
