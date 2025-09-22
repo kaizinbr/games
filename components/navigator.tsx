@@ -6,7 +6,7 @@ import { Profile } from "@/utils/types";
 
 export default function Header({ profile }: { profile: Profile | null }) {
     const { data: session } = useSession();
-    // console.log("Session data in Header:", profile);
+    console.log("Session data in Header:", profile);
 
     return (
         <header className="w-full bg-white/20 shadow-md py-4 px-8">

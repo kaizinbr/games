@@ -1,5 +1,5 @@
 import { auth } from "@/auth"
-import prisma from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { EditProfileForm } from "@/components/profile/edit-form";
 
 export default async function EditProfilePage({
