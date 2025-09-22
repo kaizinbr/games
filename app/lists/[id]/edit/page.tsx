@@ -1,5 +1,4 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/auth"; // ajuste o caminho conforme seu projeto
+import { auth } from "@/auth"
 import prisma from "@/lib/prisma";
 
 export default async function EditListPage({
@@ -7,7 +6,7 @@ export default async function EditListPage({
 }: {
     params: Promise<{ id: string }>;
 }) {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) {
         return <div>Você precisa estar logado para editar o perfil.</div>;
     }
@@ -19,7 +18,7 @@ export default async function EditListPage({
         include: { user: true },
     });
 
-    if (!list || list.userId !== session.user.id) {
+    if (!list || !session.user || list.userId !== session.user.id) {
         return <div>Você não tem permissão para editar esta lista.</div>;
     }
 

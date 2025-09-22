@@ -1,5 +1,4 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/auth"; // ajuste o caminho conforme seu projeto
+import { auth } from "@/auth"
 import prisma from "@/lib/prisma";
 import { EditProfileForm } from "@/components/profile/edit-form";
 
@@ -8,7 +7,7 @@ export default async function EditProfilePage({
 }: {
     params: Promise<{ username: string }>;
 }) {
-    const session = await getServerSession(authOptions);
+    const session = await auth()
     if (!session) {
         return <div>Você precisa estar logado para editar o perfil.</div>;
     }
@@ -20,7 +19,7 @@ export default async function EditProfilePage({
         include: { user: true },
     });
 
-    if (!profile || profile.id !== session.user.id) {
+    if (!profile || !session.user || profile.id !== session.user.id) {
         return <div>Você não tem permissão para editar este perfil.</div>;
     }
 

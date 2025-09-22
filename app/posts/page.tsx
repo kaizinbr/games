@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
-import { GamePost } from "@prisma/client"; 
+import { GamePost } from "@prisma/client";
 
 interface PostWithUser extends GamePost {
     user?: {

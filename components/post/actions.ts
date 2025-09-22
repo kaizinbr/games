@@ -1,8 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/auth";
+import { auth } from "@/auth"
 
 import getShortenedId from "@/utils/getShortener";
 
@@ -14,7 +13,7 @@ export async function createPost(formData: FormData) {
         : null;
     const content = formData.get("content") as string;
     const played = formData.get("played") as string;
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user) {
         throw new Error("You must be logged in to create a post");
     }
@@ -37,7 +36,7 @@ export async function createPost(formData: FormData) {
         data: {
             content,
             shortId: getShortenedId(),
-            userId: session.user.id,
+            userId: session.user.id as string,
             gameId: gameRawgId,
             played: played ? Number(played) : 0,
         },
