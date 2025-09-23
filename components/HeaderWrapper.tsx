@@ -8,16 +8,26 @@ import Header from "@/components/navigator";
 export default async function HeaderWrapper() {
     // const session = await getServerSession(authOptions);
     const session = await auth();
-
-    if (!session?.user) return null;
     console.log("Session data in HeaderWrapper:", session);
+
+    // if (!session?.user) return null;
 
     let profile = null;
     if (session?.user?.id) {
-        profile = await prisma.profile.findUnique({
+        const dbProfile = await prisma.profile.findUnique({
             where: { id: session.user.id },
             include: { user: true },
         });
+        if (dbProfile) {
+            // Ensure password is always a string
+            profile = {
+                ...dbProfile,
+                user: {
+                    ...dbProfile.user,
+                    password: dbProfile.user.password ?? "",
+                },
+            };
+        }
     }
     return <Header profile={profile} />;
 }

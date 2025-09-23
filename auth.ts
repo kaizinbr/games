@@ -31,84 +31,106 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         Resend({
             from: "kaizin@kaizin.com.br",
         }),
-        // CredentialsProvider({
-        //     name: "credentials",
-        //     credentials: {
-        //         email: { label: "Email", type: "email" },
-        //         name: { label: "Name", type: "name" },
-        //         password: { label: "Password", type: "password" },
-        //     },
-        //     async authorize(credentials) {
-        //         const creds = parseCredentials(credentials);
+        CredentialsProvider({
+            name: "credentials",
+            credentials: {
+                email: { label: "Email", type: "email" },
+                name: { label: "Name", type: "name" },
+                password: { label: "Password", type: "password" },
+            },
+            async authorize(credentials) {
+                const creds = parseCredentials(credentials);
+                if (!creds?.email || !creds?.password) return null;
 
-        //         const user = await prisma.user.findUnique({
-        //             where: { email: creds.email },
-        //         });
+                const user = await prisma.user.findUnique({
+                    where: { email: creds.email },
+                });
 
-        //         if (!user) {
-        //             const animal = fakerPT_BR.animal.type();
-        //             const tempUsername = fakerPT_BR.internet.username({
-        //                 firstName: creds.name?.substring(0, 10),
-        //                 lastName: animal,
-        //             });
-        //             const newUser = await prisma.user.create({
-        //                 data: {
-        //                     name: creds.name ?? creds.email,
-        //                     email: creds.email,
-        //                     password: await bcrypt.hash(creds.password, 10),
-        //                     Profile: {
-        //                         create: {
-        //                             username: tempUsername,
-        //                             lowername: tempUsername.toLowerCase(),
-        //                             bio: "",
-        //                             avatarUrl: "",
-        //                         },
-        //                     },
-        //                 },
-        //             });
-        //             // Retorne apenas os campos necessários
-        //             return {
-        //                 id: newUser.id,
-        //                 email: newUser.email,
-        //                 name: newUser.name,
-        //             };
-        //         }
+                if (!user) {
+                    const animal = fakerPT_BR.animal.type();
+                    const tempUsername = fakerPT_BR.internet.username({
+                        firstName: creds.name?.substring(0, 10),
+                        lastName: animal,
+                    });
+                    const newUser = await prisma.user.create({
+                        data: {
+                            name: creds.name ?? creds.email,
+                            email: creds.email,
+                            password: await bcrypt.hash(creds.password, 10),
+                            Profile: {
+                                create: {
+                                    username: tempUsername,
+                                    lowername: tempUsername.toLowerCase(),
+                                    bio: "",
+                                    avatarUrl: "",
+                                },
+                            },
+                        },
+                    });
 
-        //         if (!user.password) {
-        //             throw new Error("Invalid credentials 1");
-        //         }
-        //         const isCorrectPassword = await bcrypt.compare(
-        //             creds.password,
-        //             user.password
-        //         );
+                    return {
+                        id: newUser.id,
+                        email: newUser.email,
+                        name: newUser.name,
+                    };
+                }
 
-        //         if (!isCorrectPassword) {
-        //             throw new Error("Invalid credentials");
-        //         }
+                if (!user.password) {
+                    throw new Error("Invalid credentials 1");
+                }
+                const isCorrectPassword = await bcrypt.compare(
+                    creds.password,
+                    user.password
+                );
 
-        //         return {
-        //             id: user.id,
-        //             email: user.email,
-        //             name: user.name,
-        //         };
-        //     },
-        // }),
+                if (!isCorrectPassword) {
+                    throw new Error("Invalid credentials");
+                }
+
+                return {
+                    id: user.id,
+                    email: user.email,
+                    name: user.name,
+                };
+            },
+        }),
     ],
     pages: {
         signIn: "/login",
+        verifyRequest: "/verify",
     },
+    cookies: {
+        sessionToken: {
+            name: `next-auth.session-token`,
+            options: {
+                httpOnly: true,
+                sameSite: "lax",
+                path: "/",
+                secure: process.env.NODE_ENV === "production" ? true : false,
+            },
+        },
+    },
+    debug: true,
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
                 token.id = user.id;
                 token.email = user.email;
                 token.name = user.name;
+                console.log("User data in auth.ts:", user, token);
             }
             return token;
         },
         async session({ session, token }) {
             if (session.user && token.id) {
-                session.user.id = String(token.id);
+                const user = await prisma.user.findUnique({
+                    where: { id: String(token.id) },
+                });
+                if (user) {
+                    session.user.id = user.id;
+                    session.user.email = user.email;
+                    session.user.name = user.name;
+                }
             }
             return session;
         },

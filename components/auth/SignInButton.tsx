@@ -24,4 +24,4 @@ async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         }
     }
 
-export default function SignInButton() {
+export default function SignInButton() 
