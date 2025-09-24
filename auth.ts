@@ -96,8 +96,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         }),
     ],
     pages: {
-        signIn: "/login",
+        signIn: "/resend",
         verifyRequest: "/verify",
+        newUser: "/new-user",
     },
     cookies: {
         sessionToken: {
@@ -111,26 +112,28 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         },
     },
     debug: true,
+    secret: process.env.AUTH_SECRET,
+    session: {
+        strategy: "jwt",
+        maxAge: 30 * 24 * 60 * 60, // 30 days
+    },
     callbacks: {
         async jwt({ token, user }) {
+            console.log("JWT callback:", { token, user });
             if (user) {
                 token.id = user.id;
                 token.email = user.email;
                 token.name = user.name;
-                console.log("User data in auth.ts:", user, token);
             }
             return token;
         },
+        
         async session({ session, token }) {
+            console.log("Session callback:", { session, token });
             if (session.user && token.id) {
-                const user = await prisma.user.findUnique({
-                    where: { id: String(token.id) },
-                });
-                if (user) {
-                    session.user.id = user.id;
-                    session.user.email = user.email;
-                    session.user.name = user.name;
-                }
+                session.user.id = String(token.id);
+                session.user.email = token.email ?? "";
+                session.user.name = token.name;
             }
             return session;
         },

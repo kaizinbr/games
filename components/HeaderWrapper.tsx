@@ -1,6 +1,4 @@
-// app/HeaderWrapper.tsx (Server Component)
-// import { getServerSession } from "next-auth";
-// import { authOptions } from "@/auth";
+
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import Header from "@/components/navigator";
@@ -8,7 +6,7 @@ import Header from "@/components/navigator";
 export default async function HeaderWrapper() {
     // const session = await getServerSession(authOptions);
     const session = await auth();
-    console.log("Session data in HeaderWrapper:", session);
+    // console.log("Session data in HeaderWrapper:", session);
 
     // if (!session?.user) return null;
 
@@ -18,6 +16,7 @@ export default async function HeaderWrapper() {
             where: { id: session.user.id },
             include: { user: true },
         });
+        console.log("DB Profile:", session.user.id);
         if (dbProfile) {
             // Ensure password is always a string
             profile = {
