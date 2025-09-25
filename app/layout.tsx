@@ -1,6 +1,5 @@
 // app/layout.tsx
 import "./globals.css";
-import HeaderWrapper from "@/components/HeaderWrapper";
 import Providers from "./providers";
 
 export const metadata = {
@@ -17,10 +16,7 @@ export default function RootLayout({
         <html lang="pt-br">
             <body>
                 <Providers>
-                    <div className="min-h-screen flex flex-col">
-                        <HeaderWrapper />
-                        <main className="flex-1">{children}</main>
-                    </div>
+                    {children}
                 </Providers>
             </body>
         </html>

@@ -1,45 +1,46 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 
 export default function LoginPage() {
-    const router = useRouter();
+    // const router = useRouter();
     const [error, setError] = useState<string | null>(null);
 
-    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+
+    async function handleMagicLinkSubmit(event: React.FormEvent<HTMLFormElement>) {
         try {
             event.preventDefault();
             const formData = new FormData(event.currentTarget);
-            const response = await signIn("credentials", {
+            const response = await signIn("resend", {
                 ...Object.fromEntries(formData),
                 redirect: false,
+                redirectTo: "/",
             });
 
             if (response?.error) {
-                setError("Invalid credentials");
+                setError("Failed to send magic link");
                 return;
             }
 
-            router.push("/");
-            router.refresh();
+            setError("Magic link sent! Check your email.");
         } catch (error) {
-            setError("An error occurred during login");
-            console.error("Login error:", error);
+            setError("An error occurred while sending the magic link");
+            console.error("Magic link error:", error);
         }
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full space-y-8">
                 <div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                        Sign in to your account
+                    <h2 className="mt-6 text-center text-3xl font-extrabold ">
+                        Digite seu e-mail
                     </h2>
                 </div>
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+                <form className="mt-8 space-y-6" onSubmit={handleMagicLinkSubmit}>
                     <div className="rounded-md shadow-sm -space-y-px">
                         <div>
                             <label htmlFor="email" className="sr-only">
@@ -50,21 +51,8 @@ export default function LoginPage() {
                                 name="email"
                                 type="email"
                                 required
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
                                 placeholder="Email address"
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="password" className="sr-only">
-                                Password
-                            </label>
-                            <input
-                                id="password"
-                                name="password"
-                                type="password"
-                                required
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                                placeholder="Password"
                             />
                         </div>
                     </div>

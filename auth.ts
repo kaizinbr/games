@@ -29,7 +29,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     adapter: PrismaAdapter(prisma),
     providers: [
         Resend({
-            from: "kaizin@kaizin.com.br",
+            from: "noreply@kaizin.com.br",
         }),
         CredentialsProvider({
             name: "credentials",
@@ -117,9 +117,29 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         strategy: "jwt",
         maxAge: 30 * 24 * 60 * 60, // 30 days
     },
+    events: {
+        async createUser({ user }) {
+            // criar um perfil automaticamente quando criar um usuario, evita conflitos
+            const animal = fakerPT_BR.animal.type();
+            const color = fakerPT_BR.color.human();
+            const tempUsername = fakerPT_BR.internet.username({
+                firstName: user.name?.substring(0, 10) ?? color + user.email?.substring(0, 5),
+                lastName: animal,
+            });
+            await prisma.profile.create({
+                data: {
+                    username: tempUsername,
+                    lowername: tempUsername.toLowerCase(),
+                    bio: "",
+                    avatarUrl: "",
+                    user: { connect: { id: user.id } },
+                },
+            });
+        },
+    },
     callbacks: {
         async jwt({ token, user }) {
-            console.log("JWT callback:", { token, user });
+            // console.log("JWT callback:", { token, user });
             if (user) {
                 token.id = user.id;
                 token.email = user.email;
@@ -127,9 +147,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             }
             return token;
         },
-        
+
         async session({ session, token }) {
-            console.log("Session callback:", { session, token });
+            // console.log("Session callback:", { session, token });
             if (session.user && token.id) {
                 session.user.id = String(token.id);
                 session.user.email = token.email ?? "";

@@ -39,7 +39,7 @@ export default function Header({ profile }: { profile: Profile | null }) {
                                 New List
                             </Link>
                             <Link
-                                href={`/${profile?.username || "/me"}`}
+                                href={`/${profile?.username || "me"}`}
                                 className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
                             >
                                 Profile
