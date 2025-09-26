@@ -1,7 +1,7 @@
 // app/register/actions.ts
 "use server";
 
-import prisma from "@/lib/prisma";
+import {prisma} from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth-utils";
 import { create } from "@/lib/auth";  // se quiser registrar e logar logo após
 

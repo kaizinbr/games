@@ -8,7 +8,6 @@ generator client {
     provider = "prisma-client-js"
 }
 
-
 datasource db {
     provider = "postgresql"
     url      = env("DATABASE_URL")
@@ -175,6 +174,21 @@ model VerificationToken {
     expires    DateTime
 
     @@id([identifier, token])
+}
+
+model Otp {
+    id          String   @id @default(uuid())
+    identifier  String
+    codeHash    String
+    purpose     String // "MAGIC_LINK" | "LOGIN_OTP" | "RESET_PASSWORD", opcional
+    created     DateTime @default(now())
+    expires     DateTime
+    consumed    Boolean  @default(false)
+    attempts    Int      @default(0)
+    maxAttempts Int      @default(5)
+
+    @@index([identifier])
+    @@index([expires])
 }
 
 // Optional for WebAuthn support

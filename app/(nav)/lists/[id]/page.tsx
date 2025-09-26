@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma'
+import {prisma} from '@/lib/prisma'
 import Link from 'next/link'
 
 import Image from 'next/image';
@@ -29,7 +29,7 @@ export default async function ListPage({
             <h2 className="text-2xl font-bold mt-6 mb-4">Games in this List</h2>
             {list && list.games.length > 0 ? (
                 <ul>
-                    {list.games.map((game) => (
+                    {list.games.map((game: any) => (
                         <li key={game.id} className="mb-2">
                             <h3 className="text-xl font-semibold">{game.game.title}</h3>
                             {game.game.coverUrl && (

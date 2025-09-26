@@ -84,7 +84,13 @@ export default function LoginPage() {
                         </button>
                     </div>
                 </form>
-                <div className="text-center">
+                <div className="text-center flex flex-col gap-2">
+                    <Link
+                        href="/password-reset"
+                        className="text-blue-600 hover:underline"
+                    >
+                        Esqueci minha senha.
+                    </Link>
                     <Link
                         href="/register"
                         className="text-blue-600 hover:underline"

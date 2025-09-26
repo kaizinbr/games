@@ -15,7 +15,6 @@ export default function NewList() {
                 description,
             });
             console.log('List created:', response.data);
-            // Optionally, redirect or clear form
         } catch (error) {
             console.error('Error creating list:', error);
         }   

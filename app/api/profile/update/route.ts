@@ -13,7 +13,6 @@ export async function POST(request: Request) {
                 lowername: data.username?.toLowerCase(),
                 name: data.name,
                 bio: data.bio,
-                avatarUrl: data.avatarUrl,
                 pronouns: data.pronouns,
                 site: data.site,
                 favoriteGenre: data.favoriteGenre,

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
+import { EditProfileForm } from "@/components/profile/edit-form";
 
 export default async function NewUserPage() {
     const session = await auth();   
@@ -27,13 +28,8 @@ export default async function NewUserPage() {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen py-2">
             <h1 className="text-4xl font-bold mb-4">Welcome to Superblog!</h1>
-            <p className="text-lg mb-8">
-                Your account has been successfully created.
-            </p>
-            <p className="text-md">
-                You can now explore posts, create new content, and connect with
-                others.
-            </p>
+
+            <EditProfileForm profile={user?.Profile} />
         </div>
     );
 }

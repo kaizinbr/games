@@ -12,11 +12,12 @@ export async function POST(req: Request) {
         );
     }
 
-    // Faz o upload p/ Vercel Blob
     const { url } = await put(`avatars/${file.name}`, file, {
-        access: "public", // ou "private" se quiser usar signed URLs
+        access: "public",
         addRandomSuffix: true,
     });
+
+    console.log("Avatar uploaded to:", url);
 
     return NextResponse.json({ url });
 }

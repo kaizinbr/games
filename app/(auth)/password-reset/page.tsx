@@ -1,12 +1,10 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-// import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 
 export default function LoginPage() {
-    // const router = useRouter();
     const [error, setError] = useState<string | null>(null);
 
     async function handleMagicLinkSubmit(
@@ -18,17 +16,17 @@ export default function LoginPage() {
             const response = await signIn("resend", {
                 ...Object.fromEntries(formData),
                 redirect: false,
-                redirectTo: "/",
+                redirectTo: "/account/password/reset",
             });
 
             if (response?.error) {
-                setError("Failed to send magic link");
+                setError("Ocorreu um erro, tente novamente.");
                 return;
             }
 
-            setError("Magic link sent! Check your email.");
+            setError("Enviamos instruções para redefinir sua senha. Verifique seu e-mail.");
         } catch (error) {
-            setError("An error occurred while sending the magic link");
+            setError("Ocorreu um erro, tente novamente.");
             console.error("Magic link error:", error);
         }
     }
@@ -38,7 +36,7 @@ export default function LoginPage() {
             <div className="max-w-md w-full space-y-8">
                 <div>
                     <h2 className="mt-6 text-center text-3xl font-extrabold ">
-                        Digite seu e-mail
+                        Digite seu e-mail para redefinir sua senha
                     </h2>
                 </div>
                 <form
@@ -63,15 +61,9 @@ export default function LoginPage() {
 
                     {error && (
                         <>
-                            <div className="text-red-500 text-sm text-center">
+                            <div className="text-red-400 text-sm text-center">
                                 {error}
                             </div>
-                            <Link
-                                href="/login/credentials"
-                                className="text-blue-600 hover:underline"
-                            >
-                                Prefiro entrar com senha.
-                            </Link>
                         </>
                     )}
 
@@ -80,7 +72,7 @@ export default function LoginPage() {
                             type="submit"
                             className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                         >
-                            Sign in
+                            Redefinir senha
                         </button>
                     </div>
                 </form>
